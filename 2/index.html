@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Loop de animacao</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="animacao.js"></script>
+    <script src="bola.js"></script>
+  </head>
+  <body>
+    <canvas id="canvas_animacao" width="500" height="500"></canvas>
+    <script>
+      var canvas = document.getElementById('canvas_animacao');
+      var context = canvas.getContext('2d');
+
+      var b1 = new Bola(context);
+      b1.x = 100;
+      b1.y = 200;
+      b1.velocidadeX = 20;
+      b1.velocidadeY = -10;
+      b1.cor = 'red';
+      b1.raio = 20;
+
+      var b2 = new Bola(context);
+      b2.x = 200;
+      b2.y = 100;
+      b2.velocidadeX = 4;
+      b2.velocidadeY = 8;
+      b2.cor = 'blue';
+      b2.raio = 30;
+
+      var b3 = new Bola(context);
+      b3.x = 300;
+      b3.y = 250;
+      b3.velocidadeX = 1;
+      b3.velocidadeY = 5;
+      b3.cor = 'purple';
+      b3.raio = 60;
+
+
+      var animacao = new Animacao(context);
+      animacao.novoSprite(b1);
+      animacao.novoSprite(b2);
+      animacao.novoSprite(b3);
+
+      animacao.ligar();
+
+    </script>
+  </body>
+</html>
