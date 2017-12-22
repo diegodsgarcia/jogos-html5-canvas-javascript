@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Game</title>
+</head>
+<body>
+	<style>
+		html, body {
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+	<canvas width="300" height="300"></canvas>
+
+	<script>
+		var canvas = document.querySelector('canvas');
+		var context = canvas.getContext('2d');
+		
+		var x = 20;
+		var y = 100;
+		var raio = 5;
+		var velocidade = 40;
+
+		var anterior = new Date().getTime(); 
+
+		requestAnimationFrame(mexerBola)
+
+		function mexerBola() {
+			var agora = new Date().getTime();
+			var decorrido = agora - anterior;
+			context.clearRect(0, 0, canvas.width, canvas.height);
+
+			context.beginPath();	
+			context.arc(x, y, raio, 0, Math.PI * 2);
+			context.fill();
+			
+			x+= velocidade * decorrido / 1000;
+			anterior = agora;
+			requestAnimationFrame(mexerBola)
+		}
+	</script>
+    
+</body>
+</html>
