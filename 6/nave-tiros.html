@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="animacao.js"></script>
+    <script src="nave.js"></script>
+    <script src="teclado.js"></script>
+    <script src="tiro.js"></script>
+  </head>
+
+  <body>
+    <canvas width="500" height="500"></canvas>
+  </body>
+  <script>
+    var canvas = document.querySelector('canvas');
+    var context = canvas.getContext('2d');
+
+    var teclado = new Teclado(document);
+    var animacao = new Animacao(context);
+
+    var imgNave = new Image();
+    imgNave.src = 'img/nave.png';
+    var nave = new Nave(context, teclado, imgNave);
+    animacao.novoSprite(nave);
+
+    teclado.disparou(ESPACO, function() {
+      nave.atirar();
+    })
+
+    imgNave.onload = function() {
+
+      animacao.ligar();
+    }
+
+  </script>
+</html>
