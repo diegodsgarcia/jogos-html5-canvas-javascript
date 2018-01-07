@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="animacao.js"></script>
+    <script src="colisor.js"></script>
+    <script src="fundo.js"></script>
+    <script src="nave.js"></script>
+    <script src="ovni.js"></script>
+    <script src="teclado.js"></script>
+    <script src="tiro.js"></script>
+  </head>
+  <body>
+    <canvas width="500" height="500"></canvas>
+  </body>
+  <script>
+    var canvas = document.querySelector('canvas');
+    var context = canvas.getContext('2d');
+
+    var imagens, animacao, teclado, colisor, nave;
+    var totalImagens = 0;
+    var carregadas = 0;
+
+    carregarImagens()
+
+    function carregarImagens() {
+      imagens = {
+        espaco: 'fundo-espaco.png',
+        estrelas: 'fundo-estrelas.png',
+        nuvens: 'fundo-nuvens.png',
+        nave: 'nave-spritesheet.png',
+        ovni: 'ovni.png'
+      };
+
+      for(var i in imagens) {
+        var img = new Image();
+        img.src = `img/${imagens[i]}`;
+        img.onload = carregando;
+        totalImagens++;
+
+        imagens[i] = img;
+      }
+    }
+    
+    function carregando() {
+      carregadas++
+      if(carregadas == totalImagens) iniciarObjetos();
+    }
+
+    function iniciarObjetos() {
+      animacao = new Animacao(context);
+      teclado = new Teclado(document);
+      colisor = new Colisor();
+      espaco = new Fundo(context, imagens.espaco);
+      estrelas = new Fundo(context, imagens.estrelas);
+      nuvens = new Fundo(context, imagens.nuvens);
+      nave = new Nave(context, teclado, imagens.nave);
+
+      animacao.novoSprite(espaco);
+      animacao.novoSprite(estrelas);
+      animacao.novoSprite(nuvens);
+      animacao.novoSprite(nave);
+
+      colisor.novoSprite(nave);
+      animacao.novoProcessamento(colisor);
+
+      configuracoesIniciais();
+    }
+
+    function configuracoesIniciais() {
+      espaco.velocidade = 60;
+      estrelas.velocidade = 150;
+      nuvens.velocidade = 500;
+
+      nave.x = canvas.width / 2 - 18;
+      nave.y = canvas.height - 48;
+      nave.velocidade = 5;
+
+      teclado.disparou(ESPACO, function() {
+        nave.atirar();
+      });
+
+      animacao.ligar();
+
+      criacaoInimigos();
+    }
+
+    function criacaoInimigos() {
+      var criarInimigos = {
+        ultimoOvni: new Date().getTime(),
+        processar: function() {
+          var agora = new Date().getTime();
+          var decorrido = agora - this.ultimoOvni;
+
+          if(decorrido > 1000) {
+            novoOvni();
+            this.ultimoOvni = agora;
+          }
+        }
+      }
+
+      animacao.novoProcessamento(criarInimigos);
+    }
+
+    function novoOvni() {
+      var ovni = new Ovni(context, imagens.ovni);
+      ovni.velocidade = Math.floor(20 + Math.random() * (200 - 20 + 1));
+      ovni.x = Math.floor(Math.random() * canvas.width - imagens.ovni.width + 1);
+      ovni.y = imagens.ovni.height;
+
+      animacao.novoSprite(ovni);
+      colisor.novoSprite(ovni);
+    }
+
+  </script>
+</html>
